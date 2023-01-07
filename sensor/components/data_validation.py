@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 from typing import Optional
 from sensor import utils
+from sensor.config import TARGET_COLUMN
 
 class DataValidation:
     def __init__(self, data_validation_config, data_ingesion_artifact):
@@ -124,7 +125,7 @@ class DataValidation:
             logging.info('Dropping columns with NULL values from test_df')
             test_df = self.drop_cols_missing_values(test_df, report_key_name = "missing_data_in_test_data_set")
 
-            exclude_cols = ['class']
+            exclude_cols = [TARGET_COLUMN]
             base_df = utils.convert_columns_float(base_df, exclude_cols)
             train_df = utils.convert_columns_float(train_df, exclude_cols)
             test_df = utils.convert_columns_float(test_df, exclude_cols)
