@@ -62,24 +62,23 @@ class DataTransformation:
             transformation_pipeline.fit(input_feature_train_df)
 
             input_feature_train_arr = transformation_pipeline.transform(input_feature_train_df)
-            input_feature_test_arr = transformation_pipeline.transform(target_feature_test_df)
+            input_feature_test_arr = transformation_pipeline.transform(input_feature_test_df)
 
-            logging.info("Before resampling in training set Input: {0}, Target: {1}").format(input_feature_train_arr.shape, target_feature_train_arr.shape)
-            logging.info("Before resampling in testing set Input: {0}, Target: {1}").format(
-                input_feature_test_arr.shape, target_feature_test_arr.shape)
+            logging.info(f"Before resampling in training set Input: {input_feature_train_arr.shape}, Target: {target_feature_train_arr.shape}")
+            logging.info(f"Before resampling in testing set Input: {input_feature_test_arr.shape}, Target: {target_feature_test_arr.shape}")
 
-            smt = SMOTETomek(sampling_strategy='minority')
+
+            smt = SMOTETomek(random_state=42)
             input_feature_train_arr, target_feature_train_arr= smt.fit_resample(input_feature_train_arr, target_feature_train_arr)
 
 
             input_feature_test_arr, target_feature_test_arr = smt.fit_resample(input_feature_test_arr, target_feature_test_arr)
-            logging.info("After resampling in training set Input: {0}, Target: {1}").format(
-                input_feature_train_arr.shape, target_feature_train_arr.shape)
-            logging.info("After resampling in testing set Input: {0}, Target: {1}").format(
-                input_feature_test_arr.shape, target_feature_test_arr.shape)
+
+            logging.info(f"After resampling in training set Input: {input_feature_train_arr.shape}, Target: {target_feature_train_arr.shape}")
+            logging.info(f"After resampling in testing set Input: {input_feature_test_arr.shape}, Target: {target_feature_test_arr.shape}")
 
             #target_encoder
-            train_arr = np.c_[input_feature_train_arr, target_feature_test_arr]
+            train_arr = np.c_[input_feature_train_arr, target_feature_train_arr]
             test_arr = np.c_[input_feature_test_arr, target_feature_test_arr]
 
             #save numpy array
@@ -98,6 +97,6 @@ class DataTransformation:
             )
 
             logging.info(f"Data transformation artifact: {data_transformation_artifact}")
-
+            return data_transformation_artifact
         except Exception as e:
             raise SensorException(e, sys)

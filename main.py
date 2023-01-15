@@ -1,29 +1,17 @@
-from sensor.components.data_ingestion import DataIngestion
-from sensor.logger import logging
+from sensor.pipeline.training_pipeline import  start_training_pipeline
 from sensor.exception import SensorException
-import sys
-from sensor.entity import config_entity
-from sensor.components.data_ingestion import DataIngestion
-from sensor.components.data_validation import DataValidation
+from sensor.pipeline.batch_prediction import start_batch_prediction
 
+file_path="/Users/nikhilgopalakrishnan/PycharmProjects/sensor-fault-detection/aps_failure_training_set1.csv"
 
-def test_logger_and_exception():
-    try:
-        training_pipeline_config = config_entity.TrainingPipelineConfig()
-        data_ingestion_config = config_entity.DataIngestionConfig(training_pipeline_config)
-        print(data_ingestion_config.to_dict())
-        data_ingestion = DataIngestion(data_ingestion_config)
-        data_ingestion_artifacts = data_ingestion.initiate_data_ingestion()
+import os, sys
 
-        data_validation_config = config_entity.DataValidationConfig(training_pipeline_config)
-        data_validation = DataValidation(data_validation_config, data_ingestion_artifacts)
-        data_validation_artifact = data_validation.initiate_data_validation()
-    except Exception as e:
-        logging.debug('Stopping the test_logger_and_exception')
-        raise SensorException(e, sys)
+print(__name__)
 
 if __name__ == '__main__':
     try:
-        test_logger_and_exception()
+        #start_training_pipeline()
+        output_file = start_batch_prediction(input_file_path=file_path)
+        print(output_file)
     except Exception as e:
         raise SensorException(e, sys)

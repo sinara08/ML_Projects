@@ -5,6 +5,7 @@ from sensor.exception import SensorException
 import sys, os
 import yaml
 import dill #to save object in pickle format(serialization)
+import numpy as np
 
 def get_collection_as_dataframe(database_name, collection_name):
     try:
@@ -51,7 +52,7 @@ def save_object(file_path:str, obj):
         raise SensorException(e, sys)
 
 
-def load_object(file_path:str, obj):
+def load_object(file_path:str):
     try:
         if not os.path.exists(file_path):
             raise Exception('The file {0} does not exist').format(file_path)
@@ -73,5 +74,17 @@ def save_numpy_array_data(file_path, array):
         with open(file_path, "wb") as file_obj:
             np.save(file_obj, array)
 
+    except Exception as e:
+        raise SensorException(e, sys)
+
+def load_numpy_array_data(file_path: str) -> np.array:
+    """
+    load numpy array data from file
+    file_path: str location of file to load
+    return: np.array data loaded
+    """
+    try:
+        with open(file_path, "rb") as file_obj:
+            return np.load(file_obj)
     except Exception as e:
         raise SensorException(e, sys)

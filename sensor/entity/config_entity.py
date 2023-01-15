@@ -55,16 +55,34 @@ class DataTransformationConfig:
                                                          'data_transformation')
         self.transformed_train_file_path = os.path.join(self.data_transformation_dir,
                                                              "transformer",
-                                                             "train.csv" )
+                                                             TRAIN_FILE_NAME.replace("csv", "npz") )
         self.transformed_test_file_path = os.path.join(self.data_transformation_dir,
                                                             "transformer",
-                                                            "test.csv" )
+                                                            TEST_FILE_NAME.replace("csv", "npz") )
         self.transformed_object_file_path = os.path.join(self.data_transformation_dir,
                                                               "transformer",
                                                               TRANSFORMER_OBJECT_FILE_NAME )
         self.target_encoder_path = os.path.join(self.data_transformation_dir,
                                                               "target_encoder",
                                                               TARGET_ENCODER_OBJECT_FILE_NAME )
-class ModelTrainingConfig:...
-class ModelEvaluationConfig:...
-class ModelPusherConfig:...
+class ModelTrainingConfig:
+    def __init__(self, training_pipeline_config: TrainingPipelineConfig):
+        self.model_trainer_dir = os.path.join(
+            training_pipeline_config.artifact_dir, "model_trainer"
+        )
+        self.trained_model_file_path: str = os.path.join(
+            self.model_trainer_dir, "trained_model", MODEL_FILE_NAME
+        )
+        self.expected_accuracy = 0.7
+        self.overfitting_underfitting_threshold = 0.1
+class ModelEvaluationConfig:
+    def __init__(self, training_pipeline_config: TrainingPipelineConfig):
+        self.change_threshold  = 0.01
+class ModelPusherConfig:
+    def __init__(self,training_pipeline_config:TrainingPipelineConfig):
+        self.model_pusher_dir = os.path.join(training_pipeline_config.artifact_dir , "model_pusher")
+        self.saved_model_dir = os.path.join("saved_models")
+        self.pusher_model_dir = os.path.join(self.model_pusher_dir,"saved_models")
+        self.pusher_model_path = os.path.join(self.pusher_model_dir,MODEL_FILE_NAME)
+        self.pusher_transformer_path = os.path.join(self.pusher_model_dir,TRANSFORMER_OBJECT_FILE_NAME)
+        self.pusher_target_encoder_path = os.path.join(self.pusher_model_dir,TARGET_ENCODER_OBJECT_FILE_NAME)
