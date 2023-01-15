@@ -2,7 +2,7 @@ from setuptools import find_packages,setup
 
 REQUIREMENT_FILE_NAME  = 'requirements.txt'
 HYPHEN_E_DOT = '-e .'
-def get_requirements()->list[str]:
+def get_requirements():
     """
     This function will return list of requirements
     """
